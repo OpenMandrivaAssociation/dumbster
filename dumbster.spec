@@ -45,6 +45,7 @@ Group:          Development/Java
 Source0:        http://prdownloads.sourceforge.net/dumbster/dumbster1.6-all.zip
 Patch0:         dumbster-SimpleSmtpServer.patch
 BuildRequires:  ant >= 0:1.6
+BuildRequires:  ant-junit >= 0:1.6
 BuildRequires:  jpackage-utils >= 0:1.6
 BuildRequires:  jaf
 BuildRequires:  javamail
@@ -96,6 +97,8 @@ ln -sf $(build-classpath jaf)
 ln -sf $(build-classpath junit)
 ln -sf $(build-classpath sasl)
 popd
+export OPT_JAR_LIST="ant/ant-junit"
+export CLASSPATH=
 %{ant} world javadoc
 
 %install
