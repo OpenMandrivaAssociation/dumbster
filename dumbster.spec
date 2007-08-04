@@ -83,12 +83,9 @@ Requires(postun): /bin/rm
 %setup -c -q -n %{name}-%{version}
 # remove all binary libs
 find . -name "*.jar" -exec rm -f {} \;
-#for j in $(find . -name "*.jar"); do
-#      mv $j $j.no
-#done
 %{__perl} -pi -e 's/\r$//g' license.txt
-
-%patch0
+%{__perl} -pi -e 's/fork="yes"/fork="no"/g;' build.xml
+%patch0 -p0
 
 %build
 pushd lib
