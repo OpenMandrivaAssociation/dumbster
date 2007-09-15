@@ -37,7 +37,7 @@
 Summary:        Fake SMTP Server
 Name:           dumbster
 Version:        1.6
-Release:        %mkrel 2.0.2
+Release:        %mkrel 2.0.3
 Epoch:          0
 License:        Apache License
 URL:            http://quintanasoft.com/dumbster/
@@ -55,8 +55,6 @@ Requires:       java-sasl
 Requires:       javamail
 %if %{gcj_support}
 BuildRequires:          java-gcj-compat-devel
-Requires(post):         java-gcj-compat
-Requires(postun):       java-gcj-compat
 %endif
 %if ! %{gcj_support}
 BuildArch:      noarch
