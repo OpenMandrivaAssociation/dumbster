@@ -59,7 +59,6 @@ BuildRequires:          java-gcj-compat-devel
 %if ! %{gcj_support}
 BuildArch:      noarch
 %endif
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 The Dumbster is a very simple fake SMTP server designed for
