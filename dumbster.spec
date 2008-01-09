@@ -37,7 +37,7 @@
 Summary:        Fake SMTP Server
 Name:           dumbster
 Version:        1.6
-Release:        %mkrel 2.0.4
+Release:        %mkrel 2.0.5
 Epoch:          0
 License:        Apache License
 URL:            http://quintanasoft.com/dumbster/
@@ -47,14 +47,14 @@ Patch0:         dumbster-SimpleSmtpServer.patch
 BuildRequires:  ant >= 0:1.6
 BuildRequires:  ant-junit >= 0:1.6
 BuildRequires:  java-rpmbuild >= 0:1.6
-BuildRequires:  jaf
-BuildRequires:  javamail
+BuildRequires:  geronimo-jaf-1.0.2-api
+BuildRequires:  geronimo-javamail-1.3.1-api
 BuildRequires:  junit
-Requires:       jaf
+Requires:       geronimo-jaf-1.0.2-api
 Requires:       java-sasl
-Requires:       javamail
+Requires:       geronimo-javamail-1.3.1-api
 %if %{gcj_support}
-BuildRequires:          java-gcj-compat-devel
+BuildRequires:  java-gcj-compat-devel
 %endif
 %if ! %{gcj_support}
 BuildArch:      noarch
