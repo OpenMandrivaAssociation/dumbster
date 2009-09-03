@@ -37,7 +37,7 @@
 Summary:        Fake SMTP Server
 Name:           dumbster
 Version:        1.6
-Release:        %mkrel 2.0.5
+Release:        %mkrel 2.0.6
 Epoch:          0
 License:        Apache License
 URL:            http://quintanasoft.com/dumbster/
