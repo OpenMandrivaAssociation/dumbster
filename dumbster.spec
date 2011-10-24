@@ -28,38 +28,26 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define _with_gcj_support 1
-
-%define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
-
-%define section free
-
 Summary:        Fake SMTP Server
 Name:           dumbster
 Version:        1.6
-Release:        %mkrel 2.0.7
-Epoch:          0
-License:        Apache License
+Release:        11
+License:        ASL 2.0
 URL:            http://quintanasoft.com/dumbster/
-Group:          Development/Java
-Source0:        http://prdownloads.sourceforge.net/dumbster/dumbster1.6-all.zip
-Patch0:         dumbster-SimpleSmtpServer.patch
+Group:          Development/Java 
+# cvs -z3 -d:pserver:anonymous@dumbster.cvs.sourceforge.net:/cvsroot/dumbster export -r RELEASE_1_6 dumbster
+# tar czf dumbster-1.6-src.tgz dumbster
+Source0:        %{name}-%{version}-src.tgz
+Source1:        %{name}-1.6.pom
+Patch0:         %{name}-SimpleSmtpServer.patch
 BuildRequires:  ant >= 0:1.6
-BuildRequires:  ant-junit >= 0:1.6
-BuildRequires:  java-rpmbuild >= 0:1.6
-BuildRequires:  geronimo-jaf-1.0.2-api
-BuildRequires:  geronimo-javamail-1.3.1-api
+BuildRequires:  jpackage-utils >= 0:1.6
+BuildRequires:  javamail
 BuildRequires:  junit
-Requires:       geronimo-jaf-1.0.2-api
 Requires:       java-sasl
-Requires:       geronimo-javamail-1.3.1-api
-%if %{gcj_support}
-BuildRequires:  java-gcj-compat-devel
-%endif
-%if ! %{gcj_support}
+Requires:       javamail
+
 BuildArch:      noarch
-%endif
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 The Dumbster is a very simple fake SMTP server designed for
@@ -70,31 +58,27 @@ Dumbster for later extraction and verification.
 
 %package javadoc
 Summary:        Javadoc for %{name}
-Group:          Development/Java
-Requires(post):   /bin/rm,/bin/ln
-Requires(postun): /bin/rm
+Group:          Development/Java 
 
 %description javadoc
 %{summary}.
 
 %prep
-%setup -c -q -n %{name}-%{version}
+%setup -q -n %{name}
 # remove all binary libs
 find . -name "*.jar" -exec rm -f {} \;
-%{__perl} -pi -e 's/\r$//g' license.txt
+
 %patch0 -p0
+rm -f src/com/dumbster/smtp/SimpleSmtpServer.java.orig
 
 %build
 pushd lib
 ln -sf $(build-classpath javamail)
-ln -sf $(build-classpath jaf)
 ln -sf $(build-classpath junit)
 ln -sf $(build-classpath sasl)
 popd
-export OPT_JAR_LIST="ant/ant-junit"
-export CLASSPATH=
-# XXX: world target not used due to test failures on gcj
-%{ant} jar javadoc
+
+ant jar javadoc
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -103,48 +87,35 @@ rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_javadir}
 
 install -m 0644 build/%{name}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
-(cd $RPM_BUILD_ROOT%{_javadir} && for jar in *-%{version}.jar; do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
+  $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
 
 # javadoc
-mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr doc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+mkdir -p $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+cp -pr doc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
+# pom
+install -dm 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
+cp -pr %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}.pom
+%add_to_maven_depmap dumbster %{name} 1.6 JPP %{name}
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+install -dm 755 $RPM_BUILD_ROOT%{_javadir}/maven2
+ln -s %{_datadir}/maven2/poms $RPM_BUILD_ROOT%{_javadir}/maven2/poms
 
-%if %{gcj_support}
 %post
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
+%update_maven_depmap
 
-%if %{gcj_support}
 %postun
-if [ -x %{_bindir}/rebuild-gcj-db ]
-then
-  %{_bindir}/rebuild-gcj-db
-fi
-%endif
+%update_maven_depmap
 
 %files
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %doc license.txt
 %{_javadir}/*.jar
-%if %{gcj_support}
-%attr(-,root,root) %dir %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/%{name}-%{version}.jar.*
-%endif
-
+%{_datadir}/maven2/poms
+%{_javadir}/maven2
+%{_mavendepmapfragdir}
 
 %files javadoc
-%defattr(0644,root,root,0755)
-%doc %{_javadocdir}/%{name}-%{version}
-%doc %{_javadocdir}/%{name}
+%defattr(-,root,root,-)
+%{_javadocdir}/%{name}
+
