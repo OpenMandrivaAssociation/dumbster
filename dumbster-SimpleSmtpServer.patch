@@ -1,0 +1,43 @@
+diff -up ./src/com/dumbster/smtp/SimpleSmtpServer.java.sav ./src/com/dumbster/smtp/SimpleSmtpServer.java
+--- ./src/com/dumbster/smtp/SimpleSmtpServer.java.sav	2008-01-09 18:03:50.000000000 -0500
++++ ./src/com/dumbster/smtp/SimpleSmtpServer.java	2008-01-09 18:08:21.000000000 -0500
+@@ -145,11 +145,14 @@ public class SimpleSmtpServer implements
+   public synchronized void stop() {
+     // Mark us closed
+     stopped = true;
+-    try {
+-      // Kick the server accept loop
+-      serverSocket.close();
+-    } catch (IOException e) {
+-      // Ignore
++
++    if (serverSocket != null) {
++        try {
++          // Kick the server accept loop
++          serverSocket.close();
++        } catch (IOException e) {
++          // Ignore
++        }
+     }
+   }
+ 
+# revision 1.8
+# date: 2005/04/14 14:09:38;  author: jasonkitchen;  state: Exp;  lines: +1 -1
+# Move thread start inside of synchronized block to prevent notifications being sent before anyone is waiting.
+#
+diff -r -u --exclude=CVS dumbster.1.6/src/com/dumbster/smtp/SimpleSmtpServer.java dumbster/src/com/dumbster/smtp/SimpleSmtpServer.java
+--- src/com/dumbster/smtp/SimpleSmtpServer.java	2005-03-23 10:59:42.000000000 -0500
++++ src/com/dumbster/smtp/SimpleSmtpServer.java	2005-04-14 10:09:38.000000000 -0400
+@@ -252,11 +252,11 @@
+   public static SimpleSmtpServer start(int port) {
+     SimpleSmtpServer server = new SimpleSmtpServer(port);
+     Thread t = new Thread(server);
+-    t.start();
+     
+     // Block until the server socket is created
+     synchronized (server) {
+       try {
++        t.start();
+         server.wait();
+       } catch (InterruptedException e) {
+         // Ignore don't care.
