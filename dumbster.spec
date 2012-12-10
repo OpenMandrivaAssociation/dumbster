@@ -119,3 +119,62 @@ ln -s %{_datadir}/maven2/poms $RPM_BUILD_ROOT%{_javadir}/maven2/poms
 %defattr(-,root,root,-)
 %{_javadocdir}/%{name}
 
+
+
+%changelog
+* Sun Nov 27 2011 Guilherme Moro <guilherme@mandriva.com> 1.6-13
++ Revision: 733871
+- rebuild
+- imported package dumbster
+
+* Thu Dec 09 2010 Oden Eriksson <oeriksson@mandriva.com> 0:1.6-2.0.7mdv2011.0
++ Revision: 617906
+- the mass rebuild of 2010.0 packages
+
+* Thu Sep 03 2009 Thierry Vignaud <tv@mandriva.org> 0:1.6-2.0.6mdv2010.0
++ Revision: 428402
+- rebuild
+
+* Thu Jan 10 2008 David Walluck <walluck@mandriva.org> 0:1.6-2.0.5mdv2008.1
++ Revision: 147439
+- explicitly require geronimo for jaf and javamail
+
+  + Olivier Blin <blino@mandriva.org>
+    - restore BuildRoot
+
+  + Thierry Vignaud <tv@mandriva.org>
+    - kill re-definition of %%buildroot on Pixel's request
+
+* Sun Dec 16 2007 Anssi Hannula <anssi@mandriva.org> 0:1.6-2.0.4mdv2008.1
++ Revision: 120865
+- buildrequire java-rpmbuild, i.e. build with icedtea on x86(_64)
+
+* Sat Sep 15 2007 Anssi Hannula <anssi@mandriva.org> 0:1.6-2.0.3mdv2008.0
++ Revision: 87344
+- rebuild to filter out autorequires of GCJ AOT objects
+- remove unnecessary Requires(post) on java-gcj-compat
+
+* Sun Aug 05 2007 David Walluck <walluck@mandriva.org> 0:1.6-2.0.2mdv2008.0
++ Revision: 59026
+- disable tests due to gcj failure
+- fix license
+- don't fork junit
+- BuildRequires: ant-junit
+- Import dumbster
+
+
+
+* Mon Jul 09 2007 Alexander Kurtakov <akurtakov@active-lynx.com> - 0:1.6-2.0.1mdv2008.0
+- Use mdv macros
+- Fix group
+
+* Wed May 09 2007 Ralph Apel <r.apel@r-apel.de> - 0:1.6-2jpp
+- Fix date in copyright notice
+- Fix aot build
+- Make Vendor, Distribution based on macro
+- Fix BR for java-sasl to gnu-crypto-sasl-jdk1.4
+
+* Wed Sep 13 2006 Ralph Apel <r.apel@r-apel.de> - 0:1.6-1jpp
+- First JPackage build
+- Add post/postun Requires for javadoc
+- Add gcj_support option
