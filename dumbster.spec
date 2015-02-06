@@ -31,7 +31,7 @@
 Summary:        Fake SMTP Server
 Name:           dumbster
 Version:        1.6
-Release:        13
+Release:        14
 License:        ASL 2.0
 URL:            http://quintanasoft.com/dumbster/
 Group:          Development/Java 
