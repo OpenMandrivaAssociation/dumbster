@@ -33,7 +33,7 @@ Name:           dumbster
 Version:        1.6
 Release:        14
 License:        ASL 2.0
-URL:            http://quintanasoft.com/dumbster/
+URL:            https://quintanasoft.com/dumbster/
 Group:          Development/Java 
 # cvs -z3 -d:pserver:anonymous@dumbster.cvs.sourceforge.net:/cvsroot/dumbster export -r RELEASE_1_6 dumbster
 # tar czf dumbster-1.6-src.tgz dumbster
